@@ -1,0 +1,6 @@
+tmp/
+.git/
+.idea
+build/
+sizewiserc.json
+docker-compose.yaml

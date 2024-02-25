@@ -1,0 +1,28 @@
+linters:
+  enable:
+    # gin rules
+    - asciicheck
+    - dogsled
+    - durationcheck
+    - errcheck
+    - errorlint
+    - exportloopref
+    - gci
+    - gofmt
+    - goimports
+    - gosec
+    - misspell
+    - nakedret
+    - nilerr
+    - nolintlint
+    - revive
+    - wastedassign
+    # Caddy rules
+    - asasalint
+    - bodyclose
+    - unconvert
+    # my additions
+    - goerr113
+    - ireturn
+    - forcetypeassert
+    - nilnil
