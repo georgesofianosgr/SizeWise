@@ -91,7 +91,7 @@ Create a configuration file named sizewiserc.json and place it in your home dire
 
 Example `sizewiserc.json`:
 
-```json
+```jsonc
 {
   "version": 1.0,
   "storages": [
