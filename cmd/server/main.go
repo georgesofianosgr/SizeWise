@@ -3,48 +3,57 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log/slog"
 	"os"
 
 	"github.com/georgesofianosgr/sizewise/internal/server"
 	"github.com/georgesofianosgr/sizewise/pkg/config"
-	"github.com/joho/godotenv"
+	"github.com/georgesofianosgr/sizewise/pkg/logger"
 )
 
-func main() {
-	env := os.Getenv("APP_ENV")
-	if env == "development" {
-		fmt.Println("Running in development mode")
-		err := godotenv.Load()
-		if err != nil {
-			fmt.Printf("Error loading .env file %s\n", err)
-		}
-	}
+type Flags struct {
+	shouldServe bool
+	configPath  string
+	port        string
+	logFile     string
+	logType     string
+}
 
+func parseFlags() Flags {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		panicErr := fmt.Errorf("could not get home directory: %w", err)
 		panic(panicErr)
 	}
-
-	var shouldServe bool
-	var configPath string
-	var port string
 	defaultConfigPath := homeDir + "/" + config.FileName
-	flag.BoolVar(&shouldServe, "serve", false, "start the server")
-	flag.StringVar(&configPath, "config", defaultConfigPath, "config file")
-	flag.StringVar(&port, "port", "8080", "port")
-	flag.Parse()
 
-	if shouldServe {
-		conf, err := config.NewFromFle(configPath)
+	var flags Flags
+	flag.BoolVar(&flags.shouldServe, "serve", false, "start the server")
+	flag.StringVar(&flags.configPath, "config", defaultConfigPath, "config file")
+	flag.StringVar(&flags.port, "port", "8080", "port")
+	flag.StringVar(&flags.logFile, "log", "", "a path to append logs instead of stdout, ex /var/log/sizewise.log")
+	flag.StringVar(&flags.logType, "output", "", "default text, can be 'text' or 'json'")
+	flag.Parse()
+	return flags
+}
+
+func main() {
+	flags := parseFlags()
+	logger.SetDefaultLogger(flags.logFile, flags.logType)
+	slog.Info("Starting server with config file", "config_path", flags.configPath)
+
+	if flags.shouldServe {
+		conf, err := config.NewFromFle(flags.configPath)
 		if err != nil {
-			panicErr := fmt.Errorf("could not parse config file: %w", err)
-			panic(panicErr)
+			slog.Error("could not parse config file", "error", err)
+			os.Exit(1)
 		}
-		err = server.Start(conf, port)
+
+		err = server.Start(conf, flags.port)
 		if err != nil {
-			panicErr := fmt.Errorf("could not start server: %w", err)
-			panic(panicErr)
+			slog.Error("could not start server", "error", err)
+			os.Exit(1)
+
 		}
 	} else {
 		flag.PrintDefaults()
