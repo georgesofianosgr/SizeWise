@@ -26,3 +26,4 @@ linters:
     - ireturn
     - forcetypeassert
     - nilnil
+    - sloglint
