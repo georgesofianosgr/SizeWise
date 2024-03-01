@@ -32,7 +32,7 @@ func NewFromFle(path string) (*Config, error) {
 
 	conf := Config{}
 	decoder := json.NewDecoder(file)
-	err = decoder.Decode((&conf))
+	err = decoder.Decode(&conf)
 	if err != nil {
 		return &Config{}, err
 	}
