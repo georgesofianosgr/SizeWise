@@ -3,6 +3,9 @@
 <img src="logo.webp" width="600">
 
 ### A dynamic image serving and resizing server written in Go
+```diff
+- This project is not Production ready. Bugs and vulnerabilities exist.
+```
 
 SizeWise is a dynamic image serving and resizing server written in Go. It allows users to request images stored in various storage solutions (e.g., AWS S3, local storage) and dynamically resizes these images based on the request parameters. This is particularly useful for web applications that require images of different sizes for responsive design without the need to manually generate and store multiple versions of each image.
 
