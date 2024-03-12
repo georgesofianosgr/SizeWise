@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -60,7 +61,7 @@ func Start(config *config.Config, port string) error {
 		IdleTimeout:  15 * time.Second,
 	}
 
-	fmt.Printf("Server is running on port %s\n", port)
+	slog.Info("Server is running", "port", port)
 	err := server.ListenAndServe()
 	return err
 }
